@@ -23,6 +23,12 @@ public class Titre implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private String nom;
+    
+    private String periode;
+    
+    private Journaliste redacteurEnChef;
+    
     public Long getId() {
         return id;
     }
@@ -55,5 +61,42 @@ public class Titre implements Serializable {
     public String toString() {
         return "entities.Titre[ id=" + id + " ]";
     }
+    
+    public Titre(){
+        
+    }
+
+    public Titre(Long id, String nom, String periode, Journaliste redacteurEnChef) {
+        this.id = id;
+        this.nom = nom;
+        this.periode = periode;
+        this.redacteurEnChef = redacteurEnChef;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public String getPeriode() {
+        return periode;
+    }
+
+    public void setPeriode(String periode) {
+        this.periode = periode;
+    }
+
+    public Journaliste getRedacteurEnChef() {
+        return redacteurEnChef;
+    }
+
+    public void setRedacteurEnChef(Journaliste redacteurEnChef) {
+        this.redacteurEnChef = redacteurEnChef;
+    }
+    
+    
     
 }

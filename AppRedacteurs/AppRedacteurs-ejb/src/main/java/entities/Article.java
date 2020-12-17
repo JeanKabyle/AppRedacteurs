@@ -6,10 +6,25 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -22,8 +37,8 @@ public class Article implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     
+    public Titre titre;
     
     public String nomArticle;
     
@@ -70,6 +85,25 @@ public class Article implements Serializable {
         
     }
 
+    public Article(Long id, Titre titre, String nomArticle, Journaliste auteur, String[] motsClefs, String contenu) {
+        this.id = id;
+        this.titre = titre;
+        this.nomArticle = nomArticle;
+        this.auteur = auteur;
+        this.motsClefs = motsClefs;
+        this.contenu = contenu;
+    }
+
+    
+    
+    public Titre getTitre() {
+        return titre;
+    }
+
+    public void setTitre(Titre titre) {
+        this.titre = titre;
+    }    
+    
     public String getNomArticle() {
         return nomArticle;
     }
@@ -100,7 +134,8 @@ public class Article implements Serializable {
 
     public void setContenu(String contenu) {
         this.contenu = contenu;
-    }
+    }  
+    
     
     
 }
