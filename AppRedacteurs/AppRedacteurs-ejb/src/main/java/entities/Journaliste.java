@@ -6,6 +6,21 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,6 +37,8 @@ public class Journaliste implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    private ArrayList<Article> listeArticles;
     
     private String nom;
     
@@ -68,6 +85,7 @@ public class Journaliste implements Serializable {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
+        this.listeArticles = new ArrayList<>(); 
     }    
     
     public String getNom() {
@@ -84,6 +102,38 @@ public class Journaliste implements Serializable {
 
     public void setPrenom(String prenom) {
         this.prenom = prenom;
+    }
+
+    private Message createJMSMessageForqueueRedacteurToPresse(Session session, Object messageData) throws JMSException {
+        // TODO create and populate message to send
+        TextMessage tm = session.createTextMessage();
+        tm.setText(messageData.toString());
+        return tm;
+    }
+
+    private void sendJMSMessageToQueueRedacteurToPresse(Object messageData) throws JMSException, NamingException {
+        Context c = new InitialContext();
+        ConnectionFactory cf = (ConnectionFactory) c.lookup("java:comp/env/queueDistribToLegereFactory");
+        Connection conn = null;
+        Session s = null;
+        try {
+            conn = cf.createConnection();
+            s = conn.createSession(false, s.AUTO_ACKNOWLEDGE);
+            Destination destination = (Destination) c.lookup("java:comp/env/queueRedacteurToPresse");
+            MessageProducer mp = s.createProducer(destination);
+            mp.send(createJMSMessageForqueueRedacteurToPresse(s, messageData));
+        } finally {
+            if (s != null) {
+                try {
+                    s.close();
+                } catch (JMSException e) {
+                    Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot close session", e);
+                }
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
     }
     
     

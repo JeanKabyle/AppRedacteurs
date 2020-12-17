@@ -29,5 +29,4 @@ public interface ArticleFacadeLocal {
     List<Article> findRange(int[] range);
 
     int count();
-    
 }

@@ -93,8 +93,6 @@ public class Article implements Serializable {
         this.motsClefs = motsClefs;
         this.contenu = contenu;
     }
-
-    
     
     public Titre getTitre() {
         return titre;

@@ -10,4 +10,11 @@
     <module>AppRedacteurs-web</module>
     <module>AppRedacteurs-ejb</module>
   </modules>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>Shared</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>
